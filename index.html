@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Binge Bear — Takes, Reviews & Obsessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d0b08;
+    --bg2:       #161310;
+    --bg3:       #1e1a14;
+    --bg4:       #252018;
+    --gold:      #c9a97e;
+    --gold-dim:  #7a6040;
+    --cream:     #e8dcc8;
+    --cream-dim: #9e8f7a;
+    --forest:    #2a3328;
+    --rust:      #8c4a2a;
+    --border:    rgba(201,169,126,0.12);
+    --border2:   rgba(201,169,126,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  h1, h2, h3, h4, .display {
+    font-family: 'Cormorant', serif;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cream);
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.4rem 3rem;
+    background: linear-gradient(to bottom, rgba(13,11,8,0.96) 0%, transparent 100%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    letter-spacing: 0.2em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--gold);
+    transition: opacity 0.3s;
+  }
+  .nav-logo:hover { opacity: 0.7; }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .nav-links a { color: var(--cream-dim); transition: color 0.3s; }
+  .nav-links a:hover { color: var(--cream); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(140,74,42,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 20% 80%, rgba(42,51,40,0.3) 0%, transparent 60%),
+      linear-gradient(160deg, #161310 0%, #0d0b08 50%, #0f0d0a 100%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.1s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .hero-title {
+    font-size: clamp(4rem, 9vw, 8.5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 0.95;
+    margin-bottom: 2rem;
+    max-width: 14ch;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.25s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+  .hero-rating { display: flex; gap: 4px; align-items: center; }
+  .star { width: 14px; height: 14px; fill: var(--gold); }
+
+  .badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--border2);
+    color: var(--cream-dim);
+    border-radius: 2px;
+  }
+
+  .hero-excerpt {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--cream-dim);
+    max-width: 55ch;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--cream);
+    transition: gap 0.3s;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hero-cta::after { content: '→'; color: var(--gold); transition: transform 0.3s; }
+  .hero-cta:hover { gap: 1.25rem; }
+  .hero-cta:hover::after { transform: translateX(4px); }
+
+  .hero-scroll {
+    position: absolute;
+    right: 3rem; bottom: 5rem;
+    writing-mode: vertical-rl;
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold-dim), transparent);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(28px); }
+  }
+
+  /* SECTION */
+  .section { padding: 6rem 3rem; position: relative; }
+
+  .section-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  /* AUDIO */
+  .audio-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .audio-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .audio-title {
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .audio-desc {
+    font-size: 0.88rem;
+    color: var(--cream-dim);
+    line-height: 1.9;
+    max-width: 40ch;
+    margin-bottom: 2rem;
+  }
+
+  .audio-player-ui {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+  }
+
+  .player-track {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .player-thumb {
+    width: 56px; height: 56px;
+    background: var(--bg4);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .player-ep {
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.2rem;
+  }
+  .player-name {
+    font-family: 'Cormorant', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+  }
+
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-play {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-play:hover { transform: scale(1.05); background: var(--cream); }
+
+  .btn-skip {
+    background: none;
+    border: none;
+    color: var(--cream-dim);
+    cursor: pointer;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: 'Jost', sans-serif;
+    transition: color 0.2s;
+  }
+  .btn-skip:hover { color: var(--cream); }
+
+  .progress-bar {
+    height: 2px;
+    background: var(--border2);
+    border-radius: 1px;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 1px;
+    width: 35%;
+    position: relative;
+    pointer-events: none;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -4px; top: -3px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .player-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: var(--cream-dim);
+    letter-spacing: 0.05em;
+  }
+
+  .episodes-list {
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ep-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .ep-item:hover { background: var(--bg4); }
+  .ep-item.active { background: rgba(201,169,126,0.08); }
+
+  .ep-num { font-size: 0.65rem; color: var(--gold-dim); letter-spacing: 0.1em; min-width: 2rem; }
+  .ep-title { flex: 1; font-size: 0.85rem; color: var(--cream-dim); }
+  .ep-item.active .ep-title { color: var(--cream); }
+  .ep-dur { font-size: 0.7rem; color: var(--cream-dim); }
+
+  /* REVIEWS GRID */
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .review-card {
+    background: var(--bg);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: pointer;
+  }
+  .review-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, rgba(201,169,126,0.04), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .review-card:hover { background: var(--bg2); }
+  .review-card:hover::before { opacity: 1; }
+
+  .card-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-size: 2rem;
+    font-style: italic;
+    margin-bottom: 0.75rem;
+    transition: color 0.3s;
+  }
+  .review-card:hover .card-title { color: var(--gold); }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-stars { display: flex; gap: 3px; }
+  .card-stars svg { width: 11px; height: 11px; fill: var(--gold); }
+  .card-stars svg.dim { opacity: 0.25; }
+
+  .card-year { font-size: 0.72rem; color: var(--cream-dim); letter-spacing: 0.1em; }
+
+  .card-excerpt {
+    font-size: 0.88rem;
+    color: var(--cream-dim);
+    line-height: 1.85;
+    margin-bottom: 2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-link {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.3s, gap 0.3s;
+  }
+  .card-link::after { content: '→'; color: var(--gold); }
+  .review-card:hover .card-link { color: var(--cream); gap: 0.8rem; }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border2);
+    color: var(--cream-dim);
+    border-radius: 2px;
+  }
+
+  .card-upcoming {
+    position: absolute;
+    top: 2.5rem; right: 2.5rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rust);
+    border: 1px solid rgba(140,74,42,0.4);
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+  }
+
+  .card-bear {
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 120px; height: 120px;
+    opacity: 0.03;
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+  }
+  .review-card:hover .card-bear { opacity: 0.07; transform: scale(1.08); }
+
+  /* MANIFESTO */
+  .manifesto {
+    padding: 8rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .manifesto-quote {
+    font-family: 'Cormorant', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--cream);
+  }
+  .manifesto-quote em { color: var(--gold); font-style: italic; }
+
+  .manifesto-body { font-size: 0.92rem; color: var(--cream-dim); line-height: 2; }
+  .manifesto-body p + p { margin-top: 1.5rem; }
+
+  .manifesto-sig {
+    margin-top: 2rem;
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--gold);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg2);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+  }
+
+  .footer-copy {
+    font-size: 0.68rem;
+    color: var(--cream-dim);
+    opacity: 0.4;
+    letter-spacing: 0.05em;
+  }
+
+  .divider { height: 1px; background: var(--border); margin: 0 3rem; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .section { padding: 4rem 1.5rem; }
+    .audio-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .manifesto { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; padding: 2rem 1.5rem; text-align: center; }
+    .hero-scroll { display: none; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .divider { margin: 0 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <svg viewBox="0 0 38 38" fill="none" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="9" cy="9" r="6" fill="#c9a97e" opacity="0.9"/>
+      <circle cx="29" cy="9" r="6" fill="#c9a97e" opacity="0.9"/>
+      <circle cx="9" cy="9" r="3.2" fill="#8c6240"/>
+      <circle cx="29" cy="9" r="3.2" fill="#8c6240"/>
+      <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#c9a97e"/>
+      <ellipse cx="19" cy="24" rx="7.5" ry="5.5" fill="#b89470" opacity="0.5"/>
+      <ellipse cx="14.5" cy="18" rx="2" ry="2.2" fill="#1e1a14"/>
+      <ellipse cx="23.5" cy="18" rx="2" ry="2.2" fill="#1e1a14"/>
+      <circle cx="15.2" cy="17.1" r="0.65" fill="white" opacity="0.85"/>
+      <circle cx="24.2" cy="17.1" r="0.65" fill="white" opacity="0.85"/>
+      <ellipse cx="19" cy="22.5" rx="2.5" ry="1.6" fill="#4a2e1a"/>
+      <path d="M16.5 25 Q19 27.5 21.5 25" stroke="#4a2e1a" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+    </svg>
+    The Binge Bear
+  </a>
+  <ul class="nav-links">
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#listen">Listen</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative; z-index:1;">
+    <div class="hero-eyebrow">Latest Take</div>
+    <h1 class="hero-title">Michael</h1>
+    <div class="hero-meta">
+      <div class="hero-rating">
+        <svg class="star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        <svg class="star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        <svg class="star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        <svg class="star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        <svg class="star" viewBox="0 0 14 14" style="opacity:0.25;"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+      </div>
+      <span class="badge">2026 · Biopic</span>
+      <span class="badge">Film</span>
+    </div>
+    <p class="hero-excerpt">
+      There's a particular kind of film that mistakes spectacle for soul. Michael is not that film.
+      It is bruising, obsessive, occasionally unbearable — and I mean that as the highest praise
+      I can give something trying to make sense of a man who made no sense at all.
+    </p>
+    <a href="reviews/michael-2026.html" class="hero-cta">Read Full Review</a>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LISTEN -->
+<section class="section audio-section" id="listen">
+  <div class="audio-inner">
+    <div>
+      <div class="section-label">The Bear Reads</div>
+      <h2 class="audio-title">Hear the Takes</h2>
+      <p class="audio-desc">
+        Every review gets read aloud — because some things land differently when spoken.
+        Pour something warm, find a seat, and let the takes wash over you.
+      </p>
+    </div>
+    <div class="audio-player-ui">
+      <div class="player-track">
+        <div class="player-thumb">
+          <svg viewBox="0 0 38 38" fill="none" width="28" height="28">
+            <circle cx="9" cy="9" r="6" fill="#7a6040" opacity="0.8"/>
+            <circle cx="29" cy="9" r="6" fill="#7a6040" opacity="0.8"/>
+            <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#7a6040" opacity="0.8"/>
+            <ellipse cx="14.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/>
+            <ellipse cx="23.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/>
+            <ellipse cx="19" cy="22.5" rx="2.3" ry="1.5" fill="#3a1e0a"/>
+          </svg>
+        </div>
+        <div>
+          <div class="player-ep">Episode 01</div>
+          <div class="player-name">Michael — A Review</div>
+        </div>
+      </div>
+      <div class="player-controls">
+        <button class="btn-play" id="playBtn" onclick="togglePlay()" aria-label="Play or pause">
+          <svg id="playIcon" width="20" height="20" viewBox="0 0 20 20" fill="#0d0b08">
+            <polygon points="6,3 17,10 6,17"/>
+          </svg>
+        </button>
+        <button class="btn-skip">← 15s</button>
+        <button class="btn-skip">30s →</button>
+        <span style="margin-left:auto; font-size:0.72rem; color:var(--cream-dim);">1×</span>
+      </div>
+      <div class="progress-bar" id="progressBar" onclick="seek(event)">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="player-time">
+        <span id="currentTime">02:14</span>
+        <span>08:47</span>
+      </div>
+      <div class="episodes-list">
+        <div class="ep-item active">
+          <span class="ep-num">01</span>
+          <span class="ep-title">Michael (2026)</span>
+          <span class="ep-dur">8:47</span>
+        </div>
+        <div class="ep-item">
+          <span class="ep-num">02</span>
+          <span class="ep-title">Companion (2025)</span>
+          <span class="ep-dur">6:32</span>
+        </div>
+        <div class="ep-item" style="opacity:0.4;">
+          <span class="ep-num">03</span>
+          <span class="ep-title">Euphoria S3 Finale — Coming soon</span>
+          <span class="ep-dur">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="section" id="reviews">
+  <div class="section-label">All Takes</div>
+  <div class="reviews-grid">
+
+    <div class="review-card">
+      <div class="card-eyebrow"><span>Film</span><span style="opacity:0.4;font-size:0.6rem;">2026</span></div>
+      <h3 class="card-title">Michael</h3>
+      <div class="card-meta">
+        <div class="card-stars">
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14" class="dim"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        </div>
+        <span class="card-year">Biopic · Dir. Antoine Fuqua</span>
+      </div>
+      <p class="card-excerpt">
+        There's a particular kind of film that mistakes spectacle for soul. Michael is not that film.
+        It's bruising, obsessive, occasionally unbearable — and I mean that as the highest praise.
+        The film understands that the only honest way to portray a man this large is to keep him
+        partially obscured, half in shadow, forever at a remove.
+      </p>
+      <a href="reviews/michael-2026.html" class="card-link">Read the take</a>
+      <svg class="card-bear" viewBox="0 0 38 38" fill="none">
+        <circle cx="9" cy="9" r="6" fill="#c9a97e"/>
+        <circle cx="29" cy="9" r="6" fill="#c9a97e"/>
+        <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#c9a97e"/>
+      </svg>
+    </div>
+
+    <div class="review-card">
+      <div class="card-eyebrow"><span>Film</span><span style="opacity:0.4;font-size:0.6rem;">2025</span></div>
+      <h3 class="card-title">Companion</h3>
+      <div class="card-meta">
+        <div class="card-stars">
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        </div>
+        <span class="card-year">Sci-Fi Thriller</span>
+      </div>
+      <p class="card-excerpt">
+        Companion plays its hand early and still finds a way to gut-punch you by the third act.
+        It's a film obsessed with the gap between what we perform and what we feel — and it uses
+        its genre framework not as a crutch but as a scalpel. Sophie Thatcher is extraordinary.
+        Full marks. Not a wasted scene.
+      </p>
+      <a href="reviews/michael-2026.html" class="card-link">Read the take</a>
+      <svg class="card-bear" viewBox="0 0 38 38" fill="none">
+        <circle cx="9" cy="9" r="6" fill="#c9a97e"/>
+        <circle cx="29" cy="9" r="6" fill="#c9a97e"/>
+        <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#c9a97e"/>
+      </svg>
+    </div>
+
+    <div class="review-card">
+      <div class="card-eyebrow"><span>Television</span><span style="opacity:0.4;font-size:0.6rem;">2026</span></div>
+      <span class="card-upcoming">Coming Soon</span>
+      <h3 class="card-title">Euphoria</h3>
+      <div class="card-meta">
+        <div class="card-stars" style="opacity:0.3;">
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.8,5.2 13.3,5.5 10,8.4 11,13 7,10.5 3,13 4,8.4 0.7,5.5 5.2,5.2"/></svg>
+        </div>
+        <span class="card-year">Season 3 · Finale Review</span>
+      </div>
+      <p class="card-excerpt">
+        After years of waiting for Rue to either combust entirely or find something worth holding onto —
+        the show finally forces the question it's been circling for three seasons.
+        Notes are drafted. The bear is watching closely. Review incoming post-finale.
+      </p>
+      <span class="card-tag">In Progress</span>
+      <svg class="card-bear" viewBox="0 0 38 38" fill="none">
+        <circle cx="9" cy="9" r="6" fill="#c9a97e"/>
+        <circle cx="29" cy="9" r="6" fill="#c9a97e"/>
+        <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#c9a97e"/>
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="manifesto" id="about">
+  <blockquote class="manifesto-quote">
+    "No discourse.<br/>No algorithms.<br/>Just <em>honest takes</em> from a bear who watches too much."
+  </blockquote>
+  <div class="manifesto-body">
+    <p>
+      The Binge Bear is a one-bear operation. No staff. No aggregated scores.
+      No PR screeners with strings attached. Just someone who cares too much
+      about how stories are told, and too little about being agreeable about it.
+    </p>
+    <p>
+      Reviews span film and television — anything that demands real attention.
+      Everything gets read aloud so you can listen while you do something
+      else, or sit with it properly. Politics stays at the door.
+      This is a space for the art of the thing.
+    </p>
+    <p>New takes drop when they're ready. Not on a schedule.</p>
+    <div class="manifesto-sig">— The Binge Bear</div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">
+    <svg viewBox="0 0 38 38" fill="none" width="26" height="26">
+      <circle cx="9" cy="9" r="6" fill="#7a6040" opacity="0.8"/>
+      <circle cx="29" cy="9" r="6" fill="#7a6040" opacity="0.8"/>
+      <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#7a6040" opacity="0.8"/>
+      <ellipse cx="14.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/>
+      <ellipse cx="23.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/>
+      <ellipse cx="19" cy="22.5" rx="2.3" ry="1.5" fill="#3a1e0a"/>
+    </svg>
+    The Binge Bear
+  </div>
+  <div class="footer-copy">© 2026 thebingebear.com — All Takes Reserved</div>
+</footer>
+
+<script>
+  let playing = false;
+  let progress = 25.4;
+  let raf;
+
+  function togglePlay() {
+    playing = !playing;
+    const icon = document.getElementById('playIcon');
+    if (playing) {
+      icon.innerHTML = '<rect x="4" y="3" width="4" height="14" rx="1"/><rect x="12" y="3" width="4" height="14" rx="1"/>';
+      tick();
+    } else {
+      icon.innerHTML = '<polygon points="6,3 17,10 6,17"/>';
+      cancelAnimationFrame(raf);
+    }
+  }
+
+  let last = null;
+  function tick(ts) {
+    if (!playing) return;
+    if (last) {
+      progress += (ts - last) / 527000 * 100;
+      if (progress >= 100) progress = 0;
+      render();
+    }
+    last = ts;
+    raf = requestAnimationFrame(tick);
+  }
+
+  function render() {
+    document.getElementById('progressFill').style.width = progress + '%';
+    const cur = Math.floor((progress / 100) * 527);
+    const m = Math.floor(cur / 60);
+    const s = cur % 60;
+    document.getElementById('currentTime').textContent = m + ':' + String(s).padStart(2,'0');
+  }
+
+  function seek(e) {
+    const bar = document.getElementById('progressBar');
+    const r = bar.getBoundingClientRect();
+    progress = Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100));
+    render();
+  }
+
+  document.querySelectorAll('.ep-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.ep-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.review-card, .audio-player-ui, .manifesto-quote, .manifesto-body').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1)';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
