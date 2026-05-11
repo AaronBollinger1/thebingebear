@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Companion (2025) — The Binge Bear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../style.css" />
+<link rel="stylesheet" href="../review-page.css" />
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">
+    <svg viewBox="0 0 38 38" fill="none" width="36" height="36">
+      <circle cx="9" cy="9" r="6" fill="#c9a97e" opacity="0.9"/><circle cx="29" cy="9" r="6" fill="#c9a97e" opacity="0.9"/>
+      <circle cx="9" cy="9" r="3.2" fill="#8c6240"/><circle cx="29" cy="9" r="3.2" fill="#8c6240"/>
+      <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#c9a97e"/>
+      <ellipse cx="19" cy="24" rx="7.5" ry="5.5" fill="#b89470" opacity="0.5"/>
+      <ellipse cx="14.5" cy="18" rx="2" ry="2.2" fill="#1e1a14"/><ellipse cx="23.5" cy="18" rx="2" ry="2.2" fill="#1e1a14"/>
+      <circle cx="15.2" cy="17.1" r="0.65" fill="white" opacity="0.85"/><circle cx="24.2" cy="17.1" r="0.65" fill="white" opacity="0.85"/>
+      <ellipse cx="19" cy="22.5" rx="2.5" ry="1.6" fill="#4a2e1a"/>
+      <path d="M16.5 25 Q19 27.5 21.5 25" stroke="#4a2e1a" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+    </svg>
+    The Binge Bear
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html#reviews">Reviews</a></li>
+    <li><a href="../index.html#listen">Listen</a></li>
+    <li><a href="../index.html#about">About</a></li>
+  </ul>
+</nav>
+
+<section class="review-hero">
+  <div class="review-hero-bg" style="background: radial-gradient(ellipse 70% 50% at 30% 20%, rgba(42,51,40,0.25) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 75% 80%, rgba(50,40,30,0.2) 0%, transparent 60%), linear-gradient(150deg, #12100d 0%, #0d0b08 60%);"></div>
+  <a href="../index.html#reviews" class="back-link">All Takes</a>
+  <div class="review-hero-inner" id="hero-meta-block"></div>
+</section>
+
+<div class="player-bar" id="playerBar">
+  <span class="player-bar-label">Listen Along</span>
+  <button class="btn-play-sm" id="playBtn" onclick="togglePlay()" aria-label="Play or pause">
+    <svg id="playIcon" width="15" height="15" viewBox="0 0 20 20" fill="#0d0b08"><polygon points="6,3 17,10 6,17"/></svg>
+  </button>
+  <span class="player-bar-track">Companion (2025) — Bear Reads the Review</span>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar" onclick="seek(event)"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="player-times"><span id="currentTime">0:00</span><span id="totalTime">--:--</span></div>
+  </div>
+</div>
+<audio id="reviewAudio" preload="metadata">
+  <!-- <source src="../audio/companion-2025.mp3" type="audio/mpeg"> -->
+</audio>
+
+<article class="review-body">
+  <div class="review-text">
+
+    <p class="lede">Nonetheless it is a fun ride, with excellent actors playing in these boxes the writers have etched for them to abide in.</p>
+
+    <p>This movie tries to cross over the line between fun and serious far too much. They attempt in the beginning to have the characters seem one dimensional - all except the robot, and include shots with suspense like the dark outside of the secluded cabin when all the friends are dancing together. Nonetheless it is a fun ride, with excellent actors playing in these boxes the writers have etched for them to abide in. You see glimpses of Sophia Thatcher's brilliance and robotic aura; both offputting and utterly mesmerizing. One must feel for Jack Quaid who so constantly plays the innocent buffoon, but he does a great job with the lines and impressions. The rest of the cast does a good job, but I felt the entire time as if something was missing.</p>
+
+    <p>Whether it was a truly shocking moment before the climax, or a broad statement about society amidst the sea of opportunity to do so (the movie is literally about people creating robots for their own pleasure), it, again, dances back and forth between serious and unserious. The plot twists are excellent in isolation, but collectively they make the story feel disjointed and outrageously unrealistic (yes, I see the hypocrisy of this statement amidst the story about AI robots - but we don't seem far off it in the real world).</p>
+
+    <p>All in all it felt kiddy and unserious, but fun and rambunctious. I would highly recommend it if you are bored and want something to throw on in the background or enjoy sporadic stories with jumbled but interesting plots. Not to be appreciated by the harshest of critics or those who enjoy the classics. Definitely an acquired taste and reminds me of Send Help stylistically, although the humor in the ladder made it far more entertaining. Maybe that's what it missed - a good laugh in a very serious plot that decided to be unserious yet gory.</p>
+
+    <p class="closing">If you haven't seen it and have been wanting to, go watch it. If you haven't heard of it and sci-fi doesn't intrigue you, don't. 7/10.</p>
+
+  </div>
+</article>
+
+<a href="michael-2026.html" class="next-review">
+  <div class="next-arrow" style="transform:scaleX(-1);">→</div>
+  <div style="text-align:right;"><div class="next-label">Previous Take</div><div class="next-title">Michael</div></div>
+</a>
+
+<footer>
+  <div class="footer-logo">
+    <svg viewBox="0 0 38 38" fill="none" width="26" height="26">
+      <circle cx="9" cy="9" r="6" fill="#7a6040" opacity="0.8"/><circle cx="29" cy="9" r="6" fill="#7a6040" opacity="0.8"/>
+      <ellipse cx="19" cy="21" rx="13.5" ry="13" fill="#7a6040" opacity="0.8"/>
+      <ellipse cx="14.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/><ellipse cx="23.5" cy="18" rx="1.8" ry="2" fill="#1e1a14"/>
+      <ellipse cx="19" cy="22.5" rx="2.3" ry="1.5" fill="#3a1e0a"/>
+    </svg>
+    The Binge Bear
+  </div>
+  <div class="footer-copy">© 2026 thebingebear.com</div>
+</footer>
+
+<script src="../reviews.js"></script>
+<script src="../review-page.js"></script>
+<script>
+  // ── FILL IN THESE 6 FIELDS ONLY ──────────────────
+  const SLUG   = "companion-2025";
+  const TITLE  = "Companion";
+  const YEAR   = 2025;
+  const TYPE   = "Film Review";
+  const GENRE  = "Sci-Fi Thriller";
+  const RATING = 7;
+  // ─────────────────────────────────────────────────
+  initReviewPage(SLUG, TITLE, YEAR, TYPE, GENRE, RATING);
+</script>
+</body>
+</html>
