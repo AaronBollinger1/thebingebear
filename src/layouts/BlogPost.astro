@@ -12,75 +12,518 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
 
 <html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+  <head>
+    <BaseHead title={title} description={description} />
+    <style>
+      /* ─── TOKENS ─────────────────────────────────────────── */
+      :root {
+        --black:    #080809;
+        --surface:  #101013;
+        --surface2: #18181d;
+        --border:   rgba(255,255,255,0.07);
+        --gold:     #c9a84c;
+        --gold-dim: #8a6f2e;
+        --cream:    #f0ede6;
+        --muted:    #6b6b7a;
+        --prose-w:  680px;
+      }
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;700&family=DM+Mono:wght@300;400;500&display=swap');
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html { background: var(--black); color: var(--cream); scroll-behavior: smooth; }
+
+      body {
+        font-family: 'Syne', sans-serif;
+        background: var(--black);
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* film grain */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.35;
+      }
+
+      /* header glass */
+      header {
+        background: rgba(8,8,9,0.75) !important;
+        border-bottom: 1px solid var(--border) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+      }
+
+      main { width: 100%; }
+
+      /* ─── CINEMATIC HERO ─────────────────────────────────── */
+      .review-hero {
+        position: relative;
+        width: 100%;
+        height: min(72vh, 640px);
+        overflow: hidden;
+      }
+
+      .review-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.45) saturate(0.65);
+        transform: scale(1.04);
+        animation: heroReveal 1.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+      }
+
+      @keyframes heroReveal {
+        from { transform: scale(1.08); filter: brightness(0.2) saturate(0.4); }
+        to   { transform: scale(1.04); filter: brightness(0.45) saturate(0.65); }
+      }
+
+      /* multi-stop gradient: top vignette + heavy bottom fade */
+      .review-hero-gradient {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(to bottom,
+            rgba(8,8,9,0.55) 0%,
+            rgba(8,8,9,0.1)  30%,
+            rgba(8,8,9,0.1)  55%,
+            rgba(8,8,9,0.85) 82%,
+            rgba(8,8,9,1)    100%
+          );
+      }
+
+      /* no-image fallback: textured dark panel */
+      .review-hero-placeholder {
+        width: 100%;
+        height: 100%;
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .review-hero-placeholder::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+
+      .review-hero-placeholder::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+      }
+
+      .placeholder-initial {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(10rem, 20vw, 18rem);
+        font-weight: 300;
+        font-style: italic;
+        color: rgba(201,168,76,0.08);
+        line-height: 1;
+        position: relative;
+        z-index: 1;
+        user-select: none;
+      }
+
+      /* ─── TITLE BLOCK (overlaps hero bottom) ────────────── */
+      .review-title-block {
+        position: relative;
+        z-index: 2;
+        max-width: var(--prose-w);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 5vw, 2rem);
+        /* pull up over the hero gradient */
+        margin-top: -14rem;
+        padding-bottom: clamp(2.5rem, 5vh, 4rem);
+        animation: fadeUp 0.9s 0.3s cubic-bezier(0.25,0.46,0.45,0.94) both;
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .review-eyebrow {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .review-eyebrow::before {
+        content: '';
+        display: inline-block;
+        width: 1.5rem;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.7;
+        flex-shrink: 0;
+      }
+
+      .review-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.8rem, 6vw, 5.5rem);
+        font-weight: 300;
+        line-height: 0.92;
+        letter-spacing: -0.025em;
+        color: var(--cream);
+        margin-bottom: 1.5rem;
+      }
+
+      .review-description {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.1rem, 2vw, 1.35rem);
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.55;
+        color: rgba(240,237,230,0.6);
+        margin-bottom: 2rem;
+        max-width: 54ch;
+      }
+
+      .review-meta-row {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .review-date {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .review-updated {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(107,107,122,0.65);
+      }
+
+      .meta-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--gold-dim);
+        opacity: 0.5;
+        flex-shrink: 0;
+      }
+
+      /* ─── RULE ───────────────────────────────────────────── */
+      .review-rule {
+        max-width: var(--prose-w);
+        margin: 0 auto clamp(2.5rem, 5vh, 4rem);
+        padding: 0 clamp(1.25rem, 5vw, 2rem);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        animation: fadeUp 0.9s 0.5s cubic-bezier(0.25,0.46,0.45,0.94) both;
+      }
+
+      .review-rule-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .review-rule-ornament {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1rem;
+        color: var(--gold);
+        opacity: 0.5;
+        line-height: 1;
+      }
+
+      /* ─── PROSE BODY ─────────────────────────────────────── */
+      .prose-wrap {
+        max-width: var(--prose-w);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 5vw, 2rem) clamp(5rem, 10vh, 8rem);
+        animation: fadeUp 0.9s 0.6s cubic-bezier(0.25,0.46,0.45,0.94) both;
+      }
+
+      /* ── prose typography resets ── */
+      .prose-wrap :global(p) {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.08rem, 1.8vw, 1.22rem);
+        line-height: 1.82;
+        color: rgba(240,237,230,0.82);
+        margin-bottom: 1.6em;
+        font-weight: 400;
+      }
+
+      .prose-wrap :global(p:first-child::first-letter) {
+        font-size: 4.2em;
+        font-weight: 300;
+        float: left;
+        line-height: 0.78;
+        margin: 0.08em 0.12em 0 0;
+        color: var(--gold);
+        font-family: 'Cormorant Garamond', serif;
+      }
+
+      .prose-wrap :global(h2) {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.7rem, 3vw, 2.4rem);
+        font-weight: 300;
+        font-style: italic;
+        letter-spacing: -0.015em;
+        color: var(--cream);
+        margin: 2.5em 0 0.8em;
+        line-height: 1.1;
+      }
+
+      .prose-wrap :global(h3) {
+        font-family: 'Syne', sans-serif;
+        font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin: 2em 0 0.75em;
+      }
+
+      .prose-wrap :global(blockquote) {
+        border-left: none;
+        position: relative;
+        margin: 2.5em 0;
+        padding: 1.5em 2em 1.5em 2.5em;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .prose-wrap :global(blockquote::before) {
+        content: '\201C';
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 6rem;
+        color: var(--gold);
+        opacity: 0.15;
+        position: absolute;
+        top: -1rem;
+        left: 0.5rem;
+        line-height: 1;
+      }
+
+      .prose-wrap :global(blockquote p) {
+        font-style: italic;
+        color: rgba(240,237,230,0.7);
+        font-size: clamp(1.1rem, 2vw, 1.3rem);
+        margin: 0;
+      }
+
+      .prose-wrap :global(a) {
+        color: var(--gold);
+        text-decoration: none;
+        border-bottom: 1px solid rgba(201,168,76,0.3);
+        transition: border-color 0.2s, color 0.2s;
+      }
+
+      .prose-wrap :global(a:hover) {
+        color: #e0bc62;
+        border-bottom-color: rgba(224,188,98,0.7);
+      }
+
+      .prose-wrap :global(strong) {
+        font-weight: 600;
+        color: var(--cream);
+      }
+
+      .prose-wrap :global(em) {
+        font-style: italic;
+        color: rgba(240,237,230,0.9);
+      }
+
+      .prose-wrap :global(ul),
+      .prose-wrap :global(ol) {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.05rem, 1.8vw, 1.18rem);
+        color: rgba(240,237,230,0.78);
+        padding-left: 1.5em;
+        margin-bottom: 1.6em;
+        line-height: 1.75;
+      }
+
+      .prose-wrap :global(li) { margin-bottom: 0.4em; }
+
+      .prose-wrap :global(hr) {
+        border: none;
+        margin: 3em 0;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .prose-wrap :global(hr::before),
+      .prose-wrap :global(hr::after) {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+        display: block;
+      }
+
+      .prose-wrap :global(code) {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.82em;
+        background: var(--surface2);
+        color: var(--gold);
+        padding: 0.15em 0.45em;
+        border: 1px solid var(--border);
+      }
+
+      .prose-wrap :global(pre) {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 1.5em;
+        overflow-x: auto;
+        margin-bottom: 1.6em;
+      }
+
+      .prose-wrap :global(pre code) {
+        background: none;
+        border: none;
+        padding: 0;
+        color: var(--cream);
+      }
+
+      .prose-wrap :global(img) {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 2.5em 0;
+        filter: brightness(0.85) saturate(0.8);
+        transition: filter 0.4s ease;
+      }
+
+      .prose-wrap :global(img:hover) {
+        filter: brightness(1) saturate(1);
+      }
+
+      /* ─── BACK LINK ──────────────────────────────────────── */
+      .back-link-wrap {
+        max-width: var(--prose-w);
+        margin: 0 auto;
+        padding: 0 clamp(1.25rem, 5vw, 2rem) 2rem;
+      }
+
+      .back-link {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        transition: color 0.25s, gap 0.25s;
+      }
+
+      .back-link::before { content: '←'; }
+
+      .back-link:hover {
+        color: var(--gold);
+        gap: 0.9rem;
+      }
+
+      /* ─── CUSTOM SCROLLBAR ───────────────────────────────── */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: var(--black); }
+      ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <article>
+
+        <!-- CINEMATIC HERO IMAGE -->
+        <div class="review-hero">
+          {heroImage ? (
+            <>
+              <Image
+                class="review-hero-img"
+                width={1400}
+                height={700}
+                src={heroImage}
+                alt={title}
+              />
+              <div class="review-hero-gradient"></div>
+            </>
+          ) : (
+            <div class="review-hero-placeholder">
+              <span class="placeholder-initial">{title.charAt(0)}</span>
+              <div class="review-hero-gradient"></div>
+            </div>
+          )}
+        </div>
+
+        <!-- TITLE BLOCK -->
+        <div class="review-title-block">
+          <div class="review-eyebrow">Film Review</div>
+          <h1 class="review-title">{title}</h1>
+          {description && <p class="review-description">{description}</p>}
+          <div class="review-meta-row">
+            <span class="review-date"><FormattedDate date={pubDate} /></span>
+            {updatedDate && (
+              <>
+                <span class="meta-dot"></span>
+                <span class="review-updated">
+                  Updated <FormattedDate date={updatedDate} />
+                </span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <!-- ORNAMENTAL RULE -->
+        <div class="review-rule">
+          <div class="review-rule-line"></div>
+          <span class="review-rule-ornament">✦</span>
+          <div class="review-rule-line"></div>
+        </div>
+
+        <!-- PROSE CONTENT -->
+        <div class="prose-wrap">
+          <slot />
+        </div>
+
+      </article>
+
+      <!-- BACK NAVIGATION -->
+      <div class="back-link-wrap">
+        <a href="/blog" class="back-link">All Reviews</a>
+      </div>
+
+    </main>
+
+    <Footer />
+  </body>
 </html>

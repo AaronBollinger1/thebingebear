@@ -1,62 +1,196 @@
 ---
-const today = new Date();
+const navLinks = [
+  { href: '/',      label: 'Home'    },
+  { href: '/blog',  label: 'Reviews' },
+  { href: '/about', label: 'About'   },
+];
 ---
 
-<footer>
-	&copy; {today.getFullYear()} Your name here. All rights reserved.
-	<div class="social-links">
-		<a href="https://m.webtoo.ls/@astro" target="_blank">
-			<span class="sr-only">Follow Astro on Mastodon</span>
-			<svg
-				viewBox="0 0 16 16"
-				aria-hidden="true"
-				width="32"
-				height="32"
-				astro-icon="social/mastodon"
-				><path
-					fill="currentColor"
-					d="M11.19 12.195c2.016-.24 3.77-1.475 3.99-2.603.348-1.778.32-4.339.32-4.339 0-3.47-2.286-4.488-2.286-4.488C12.062.238 10.083.017 8.027 0h-.05C5.92.017 3.942.238 2.79.765c0 0-2.285 1.017-2.285 4.488l-.002.662c-.004.64-.007 1.35.011 2.091.083 3.394.626 6.74 3.78 7.57 1.454.383 2.703.463 3.709.408 1.823-.1 2.847-.647 2.847-.647l-.06-1.317s-1.303.41-2.767.36c-1.45-.05-2.98-.156-3.215-1.928a3.614 3.614 0 0 1-.033-.496s1.424.346 3.228.428c1.103.05 2.137-.064 3.188-.189zm1.613-2.47H11.13v-4.08c0-.859-.364-1.295-1.091-1.295-.804 0-1.207.517-1.207 1.541v2.233H7.168V5.89c0-1.024-.403-1.541-1.207-1.541-.727 0-1.091.436-1.091 1.296v4.079H3.197V5.522c0-.859.22-1.541.66-2.046.456-.505 1.052-.764 1.793-.764.856 0 1.504.328 1.933.983L8 4.39l.417-.695c.429-.655 1.077-.983 1.934-.983.74 0 1.336.259 1.791.764.442.505.661 1.187.661 2.046v4.203z"
-				></path></svg
-			>
-		</a>
-		<a href="https://twitter.com/astrodotbuild" target="_blank">
-			<span class="sr-only">Follow Astro on Twitter</span>
-			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter"
-				><path
-					fill="currentColor"
-					d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"
-				></path></svg
-			>
-		</a>
-		<a href="https://github.com/withastro/astro" target="_blank">
-			<span class="sr-only">Go to Astro's GitHub repo</span>
-			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github"
-				><path
-					fill="currentColor"
-					d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-				></path></svg
-			>
-		</a>
-	</div>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+
+<footer style="
+  display: block;
+  position: relative;
+  overflow: hidden;
+  background: #0d0d10;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  width: 100%;
+">
+
+  <!-- ghost watermark -->
+  <span style="
+    position: absolute;
+    bottom: -0.1em;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(4rem, 15vw, 12rem);
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,168,76,0.055);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+    z-index: 0;
+  " aria-hidden="true">BINGE BEAR</span>
+
+  <!-- centred column -->
+  <div style="
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: clamp(3.5rem,7vh,5.5rem) clamp(1.5rem,5vw,4rem) clamp(2rem,4vh,3rem);
+  ">
+
+    <!-- bear mark -->
+    <a href="/" style="display:inline-block; margin-bottom: 1.5rem; opacity: 0.82; transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);" class="footer-bear-link" aria-label="The Binge Bear">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="52" height="52" aria-hidden="true">
+        <ellipse cx="9.5"  cy="10" rx="5.2" ry="5.2" fill="#c9a84c" opacity="0.15"/>
+        <ellipse cx="9.5"  cy="10" rx="5.2" ry="5.2" stroke="#c9a84c" stroke-width="1.1"/>
+        <ellipse cx="9.5"  cy="10" rx="2.5" ry="2.5" fill="#c9a84c" opacity="0.35"/>
+        <ellipse cx="30.5" cy="10" rx="5.2" ry="5.2" fill="#c9a84c" opacity="0.15"/>
+        <ellipse cx="30.5" cy="10" rx="5.2" ry="5.2" stroke="#c9a84c" stroke-width="1.1"/>
+        <ellipse cx="30.5" cy="10" rx="2.5" ry="2.5" fill="#c9a84c" opacity="0.35"/>
+        <ellipse cx="20" cy="22" rx="13.5" ry="12.5" fill="#c9a84c" opacity="0.08"/>
+        <ellipse cx="20" cy="22" rx="13.5" ry="12.5" stroke="#c9a84c" stroke-width="1.1"/>
+        <ellipse cx="20" cy="26.5" rx="5.5" ry="3.8" fill="#c9a84c" opacity="0.16"/>
+        <ellipse cx="20" cy="26.5" rx="5.5" ry="3.8" stroke="#c9a84c" stroke-width="0.9"/>
+        <ellipse cx="20" cy="24.8" rx="1.6" ry="1.1" fill="#c9a84c"/>
+        <circle  cx="14.8" cy="19.5" r="1.5" fill="#c9a84c"/>
+        <circle  cx="25.2" cy="19.5" r="1.5" fill="#c9a84c"/>
+        <line x1="12.5" y1="16.5" x2="17"   y2="17.2" stroke="#c9a84c" stroke-width="0.9" stroke-linecap="round" opacity="0.65"/>
+        <line x1="23"   y1="17.2" x2="27.5" y2="16.5" stroke="#c9a84c" stroke-width="0.9" stroke-linecap="round" opacity="0.65"/>
+      </svg>
+    </a>
+
+    <!-- wordmark -->
+    <a href="/" style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      text-decoration: none;
+      margin-bottom: 1.25rem;
+      line-height: 1;
+    " class="footer-wordmark-link">
+      <span style="
+        display: block;
+        font-family: 'DM Mono', monospace, ui-monospace;
+        font-size: 9px;
+        letter-spacing: .5em;
+        text-transform: uppercase;
+        color: #c9a84c;
+        opacity: .5;
+      ">The</span>
+      <span style="
+        display: block;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+        font-weight: 300;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: #f0ede6;
+        font-style: normal;
+      ">BINGE <em style="font-style:italic; color:#c9a84c;">BEAR</em></span>
+    </a>
+
+    <!-- tagline -->
+    <p style="
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(0.92rem, 2vw, 1.08rem);
+      font-weight: 300;
+      font-style: italic;
+      color: #52525e;
+      letter-spacing: .03em;
+      margin: 0 0 clamp(2rem,4vh,3rem);
+      padding: 0;
+    ">Reviews for people who actually binge.</p>
+
+    <!-- nav -->
+    <nav aria-label="Footer navigation" style="
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: clamp(2.5rem,5vh,4rem);
+    ">
+      {navLinks.map(({ href, label }, i) => (
+        <>
+          <a
+            href={href}
+            class="footer-nav-link"
+            style="
+              font-family: 'DM Mono', monospace, ui-monospace;
+              font-size: 10px;
+              letter-spacing: .22em;
+              text-transform: uppercase;
+              color: #52525e;
+              text-decoration: none;
+              position: relative;
+              padding-bottom: 3px;
+              transition: color 0.22s ease;
+            "
+          >{label}</a>
+          {i < navLinks.length - 1 && (
+            <span aria-hidden="true" style="
+              font-size: 4px;
+              color: #c9a84c;
+              opacity: 0.25;
+              line-height: 1;
+              flex-shrink: 0;
+            ">◆</span>
+          )}
+        </>
+      ))}
+    </nav>
+
+    <!-- bottom rule + copyright -->
+    <div style="
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    ">
+      <div style="width:100%; height:1px; background:rgba(255,255,255,0.06);"></div>
+      <p style="
+        font-family: 'DM Mono', monospace, ui-monospace;
+        font-size: 9px;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        color: #3a3a44;
+        margin: 0;
+        padding: 0;
+      ">&copy; 2026 The Binge Bear. All rights reserved.</p>
+    </div>
+
+  </div>
 </footer>
-<style>
-	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
-		text-align: center;
-	}
-	.social-links {
-		display: flex;
-		justify-content: center;
-		gap: 1em;
-		margin-top: 1em;
-	}
-	.social-links a {
-		text-decoration: none;
-		color: rgb(var(--gray));
-	}
-	.social-links a:hover {
-		color: rgb(var(--gray-dark));
-	}
+
+<style is:global>
+  .footer-bear-link:hover  { opacity: 1 !important; transform: scale(1.1) rotate(-4deg) !important; }
+
+  .footer-wordmark-link:hover span:last-child { color: #ffffff !important; }
+  .footer-wordmark-link:hover span:first-child { opacity: 1 !important; }
+
+  .footer-nav-link:hover { color: #f0ede6 !important; }
+  .footer-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: #c9a84c;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .footer-nav-link:hover::after { transform: scaleX(1); }
 </style>

@@ -5,8 +5,6 @@ pubDate: "May 12 2026"
 heroImage: "../../assets/blog-placeholder-3.jpg"
 ---
 
-# Michael Review
-
 The purpose behind this entire production, as it is for many, was the money. We must accept that this is not a film selflessly produced and created by Michael Jackson post-success. This is developed and created by a talented, hungry, established team to shock the box office — which, undoubtedly, it has. This was not intended to be a cinematic spectacle or a beautiful heartwarming story; while it does both extraordinarily well, they are byproducts of the origin, the man himself, not simply the team behind it. But the team can only tell the tale as truthfully as it fits. Nevertheless, this ends up shocking you to your core when you first take your seat.
 
 As someone who is limited to 20 years of living, 15 of which I can somewhat recall, I did not have the pleasure of understanding Michael Jackson’s origins in real time. It turns out, to no retrospective surprise, that he was a spectacle of talent, insecurity, and aura. His music could open anyone’s eyes to the world of soundwaves, but on this matter I digress.
