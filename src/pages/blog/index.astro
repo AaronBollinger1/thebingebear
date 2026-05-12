@@ -8,107 +8,670 @@ import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const hero = posts[0];
+const rest  = posts.slice(1);
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style>
+      /* ─── TOKENS ─────────────────────────────────────────── */
+      :root {
+        --black:    #080809;
+        --surface:  #101013;
+        --surface2: #18181d;
+        --border:   rgba(255,255,255,0.07);
+        --gold:     #c9a84c;
+        --gold-dim: #8a6f2e;
+        --cream:    #f0ede6;
+        --muted:    #6b6b7a;
+        --radius:   2px;
+      }
+
+      /* ─── RESET & BASE ───────────────────────────────────── */
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      html { background: var(--black); color: var(--cream); scroll-behavior: smooth; }
+
+      body {
+        font-family: 'Syne', sans-serif;
+        background: var(--black);
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* film grain */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.35;
+      }
+
+      /* header glass */
+      header {
+        background: rgba(8,8,9,0.75) !important;
+        border-bottom: 1px solid var(--border) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+      }
+
+      /* ─── PAGE WRAPPER ───────────────────────────────────── */
+      main {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 4rem) clamp(5rem, 10vh, 8rem);
+      }
+
+      /* ─── PAGE HEADER ────────────────────────────────────── */
+      .page-header {
+        margin-bottom: clamp(2.5rem, 5vh, 4rem);
+        padding-bottom: clamp(1.5rem, 3vh, 2.5rem);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+
+      .page-eyebrow {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .page-eyebrow::before {
+        content: '';
+        display: inline-block;
+        width: 1.75rem;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.7;
+      }
+
+      .page-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(3rem, 6vw, 6rem);
+        font-weight: 300;
+        line-height: 0.9;
+        letter-spacing: -0.02em;
+        color: var(--cream);
+      }
+
+      .page-title em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      .page-count {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+        align-self: flex-end;
+      }
+
+      /* ─── HERO POST ──────────────────────────────────────── */
+      .hero-post {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        margin-bottom: 2px;
+        min-height: 520px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      @media (max-width: 768px) {
+        .hero-post { grid-template-columns: 1fr; min-height: auto; }
+      }
+
+      .hero-post-image-wrap {
+        position: relative;
+        overflow: hidden;
+        min-height: 420px;
+      }
+
+      .hero-post-image-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.6) saturate(0.75);
+        transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94),
+                    filter 0.5s ease;
+      }
+
+      .hero-post:hover .hero-post-image-wrap img {
+        transform: scale(1.04);
+        filter: brightness(0.4) saturate(0.55);
+      }
+
+      .hero-post-image-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(8,8,9,0.3) 0%, transparent 60%);
+        pointer-events: none;
+      }
+
+      .hero-badge {
+        position: absolute;
+        top: 1.25rem;
+        left: 1.25rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--black);
+        background: var(--gold);
+        padding: 0.3rem 0.75rem;
+        z-index: 2;
+      }
+
+      .hero-post-body {
+        background: var(--surface);
+        padding: clamp(2rem, 4vw, 3.5rem);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.35s ease;
+      }
+
+      .hero-post:hover .hero-post-body {
+        background: var(--surface2);
+      }
+
+      .hero-post-body::before {
+        content: '"';
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 20rem;
+        font-weight: 300;
+        color: rgba(201,168,76,0.04);
+        position: absolute;
+        top: -4rem;
+        right: -1rem;
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .hero-genre {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-post-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2rem, 3.5vw, 3.2rem);
+        font-weight: 300;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        color: var(--cream);
+        margin-bottom: 1.25rem;
+        position: relative;
+        z-index: 1;
+        transition: color 0.3s ease;
+      }
+
+      .hero-post:hover .hero-post-title {
+        color: #fff;
+      }
+
+      .hero-post-excerpt {
+        font-size: clamp(0.82rem, 1.2vw, 0.92rem);
+        line-height: 1.7;
+        color: var(--muted);
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+        max-width: 48ch;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .hero-post-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .hero-post-date {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .hero-read-cta {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--gold);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: gap 0.25s ease;
+      }
+
+      .hero-read-cta::after {
+        content: '→';
+      }
+
+      .hero-post:hover .hero-read-cta {
+        gap: 0.85rem;
+      }
+
+      /* ─── GRID ───────────────────────────────────────────── */
+      .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        list-style: none;
+      }
+
+      @media (max-width: 1024px) {
+        .posts-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      @media (max-width: 560px) {
+        .posts-grid { grid-template-columns: 1fr; }
+      }
+
+      /* ─── POST CARD ──────────────────────────────────────── */
+      .post-card {
+        position: relative;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: var(--surface);
+        overflow: hidden;
+        transition: background 0.3s ease;
+      }
+
+      .post-card:hover {
+        background: var(--surface2);
+      }
+
+      .post-card-image {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 3/2;
+      }
+
+      .post-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.58) saturate(0.72);
+        transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                    filter 0.45s ease;
+      }
+
+      .post-card:hover .post-card-image img {
+        transform: scale(1.06);
+        filter: brightness(0.35) saturate(0.5);
+      }
+
+      /* placeholder when no image */
+      .post-card-image-placeholder {
+        width: 100%;
+        aspect-ratio: 3/2;
+        background: var(--surface2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .post-card-image-placeholder::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      .placeholder-letter {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 5rem;
+        font-weight: 300;
+        color: rgba(201,168,76,0.15);
+        position: relative;
+        z-index: 1;
+        line-height: 1;
+        font-style: italic;
+      }
+
+      /* card number badge */
+      .card-number {
+        position: absolute;
+        top: 0.9rem;
+        left: 0.9rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        color: var(--black);
+        background: var(--gold);
+        padding: 0.2rem 0.5rem;
+        z-index: 2;
+        line-height: 1.4;
+      }
+
+      /* hover overlay */
+      .card-hover-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gold);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+      }
+
+      .post-card:hover .card-hover-bar {
+        transform: scaleX(1);
+      }
+
+      /* read overlay on image */
+      .card-image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+
+      .post-card:hover .card-image-overlay {
+        opacity: 1;
+      }
+
+      .card-image-overlay span {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--cream);
+        background: rgba(8,8,9,0.75);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(201,168,76,0.3);
+        padding: 0.6rem 1.25rem;
+      }
+
+      /* ─── CARD BODY ──────────────────────────────────────── */
+      .post-card-body {
+        padding: 1.5rem 1.6rem 1.75rem;
+        position: relative;
+      }
+
+      .post-card-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        color: var(--cream);
+        margin-bottom: 0.6rem;
+        transition: color 0.3s ease;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .post-card:hover .post-card-title {
+        color: #fff;
+      }
+
+      .post-card-date {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        transition: color 0.3s ease;
+      }
+
+      .post-card:hover .post-card-date {
+        color: rgba(201,168,76,0.7);
+      }
+
+      /* ─── SECTION DIVIDER ────────────────────────────────── */
+      .section-divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2px;
+        padding: clamp(2rem, 4vh, 3rem) 0 clamp(1rem, 2vh, 1.5rem);
+      }
+
+      .section-divider-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        white-space: nowrap;
+      }
+
+      .section-divider-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ─── EMPTY STATE ────────────────────────────────────── */
+      .empty-state {
+        padding: 6rem 0;
+        text-align: center;
+      }
+
+      .empty-state p {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2rem;
+        font-weight: 300;
+        font-style: italic;
+        color: var(--muted);
+      }
+
+      /* ─── SCROLL REVEAL ──────────────────────────────────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.65s ease, transform 0.65s ease;
+      }
+
+      .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ─── CUSTOM SCROLLBAR ───────────────────────────────── */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: var(--black); }
+      ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+
+      <!-- PAGE HEADER -->
+      <header class="page-header reveal">
+        <div>
+          <div class="page-eyebrow">The Binge Bear</div>
+          <h1 class="page-title">All<br /><em>Reviews</em></h1>
+        </div>
+        <span class="page-count">{posts.length} title{posts.length !== 1 ? 's' : ''} reviewed</span>
+      </header>
+
+      <!-- HERO POST -->
+      {hero && (
+        <>
+          <div class="section-divider reveal">
+            <span class="section-divider-label">Editor's Pick</span>
+            <div class="section-divider-line"></div>
+          </div>
+
+          <a href={`/blog/${hero.id}/`} class="hero-post reveal">
+            <div class="hero-post-image-wrap">
+              {hero.data.heroImage ? (
+                <Image
+                  width={900}
+                  height={600}
+                  src={hero.data.heroImage}
+                  alt={hero.data.title}
+                />
+              ) : (
+                <div style="width:100%;height:100%;background:var(--surface2);display:flex;align-items:center;justify-content:center;">
+                  <span style="font-family:'Cormorant Garamond',serif;font-size:8rem;font-weight:300;color:rgba(201,168,76,0.12);font-style:italic;">
+                    {hero.data.title.charAt(0)}
+                  </span>
+                </div>
+              )}
+              <span class="hero-badge">Latest</span>
+            </div>
+
+            <div class="hero-post-body">
+              <div class="hero-genre">Film Review</div>
+              <h2 class="hero-post-title">{hero.data.title}</h2>
+              {hero.data.description && (
+                <p class="hero-post-excerpt">{hero.data.description}</p>
+              )}
+              <div class="hero-post-meta">
+                <span class="hero-post-date">
+                  <FormattedDate date={hero.data.pubDate} />
+                </span>
+                <span class="hero-read-cta">Read Review</span>
+              </div>
+            </div>
+          </a>
+        </>
+      )}
+
+      <!-- GRID OF REMAINING POSTS -->
+      {rest.length > 0 && (
+        <>
+          <div class="section-divider reveal">
+            <span class="section-divider-label">All Reviews</span>
+            <div class="section-divider-line"></div>
+          </div>
+
+          <ul class="posts-grid">
+            {rest.map((post, i) => (
+              <li>
+                <a href={`/blog/${post.id}/`} class="post-card reveal" style={`transition-delay: ${(i % 3) * 0.08}s`}>
+
+                  {post.data.heroImage ? (
+                    <div class="post-card-image">
+                      <Image
+                        width={600}
+                        height={400}
+                        src={post.data.heroImage}
+                        alt={post.data.title}
+                      />
+                      <div class="card-image-overlay">
+                        <span>Read Review</span>
+                      </div>
+                      <span class="card-number">{String(i + 2).padStart(2, '0')}</span>
+                    </div>
+                  ) : (
+                    <div class="post-card-image-placeholder">
+                      <span class="placeholder-letter">{post.data.title.charAt(0)}</span>
+                      <div class="card-image-overlay">
+                        <span>Read Review</span>
+                      </div>
+                      <span class="card-number">{String(i + 2).padStart(2, '0')}</span>
+                    </div>
+                  )}
+
+                  <div class="post-card-body">
+                    <h2 class="post-card-title">{post.data.title}</h2>
+                    <p class="post-card-date">
+                      <FormattedDate date={post.data.pubDate} />
+                    </p>
+                  </div>
+
+                  <div class="card-hover-bar"></div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <!-- EMPTY STATE -->
+      {posts.length === 0 && (
+        <div class="empty-state">
+          <p>No reviews yet. Check back soon.</p>
+        </div>
+      )}
+
+    </main>
+
+    <Footer />
+
+    <script>
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
+      );
+      reveals.forEach(el => observer.observe(el));
+    </script>
+  </body>
 </html>
