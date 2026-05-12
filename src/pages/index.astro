@@ -3,47 +3,809 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const featuredReviews = [
+  {
+    id: 1,
+    title: "Dune: Part Two",
+    year: 2024,
+    director: "Denis Villeneuve",
+    rating: 9.2,
+    genre: ["Sci-Fi", "Epic"],
+    poster: "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&h=600&fit=crop&q=80",
+    excerpt: "A staggering achievement in blockbuster filmmaking. Villeneuve delivers the impossible: a sequel that eclipses its predecessor in every conceivable way.",
+  },
+  {
+    id: 2,
+    title: "Past Lives",
+    year: 2023,
+    director: "Celine Song",
+    rating: 8.9,
+    genre: ["Drama", "Romance"],
+    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=600&fit=crop&q=80",
+    excerpt: "Quietly devastating. A debut feature of such emotional precision it feels like a memory you forgot you had.",
+  },
+  {
+    id: 3,
+    title: "The Bear",
+    year: 2023,
+    director: "Christopher Storer",
+    rating: 9.5,
+    genre: ["Drama", "Series"],
+    poster: "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=600&fit=crop&q=80",
+    excerpt: "Television has rarely felt this visceral. Season two raises the bar so high it becomes its own genre.",
+  },
+];
+
+const recentReviews = [
+  { title: "Poor Things", rating: 8.7, genre: "Fantasy", year: 2023, poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=450&fit=crop&q=80" },
+  { title: "Oppenheimer", rating: 9.0, genre: "Biopic", year: 2023, poster: "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=300&h=450&fit=crop&q=80" },
+  { title: "All of Us Strangers", rating: 8.8, genre: "Drama", year: 2023, poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=450&fit=crop&q=80" },
+  { title: "Killers of the Flower Moon", rating: 8.5, genre: "Crime", year: 2023, poster: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=450&fit=crop&q=80" },
+  { title: "Saltburn", rating: 8.3, genre: "Thriller", year: 2023, poster: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=300&h=450&fit=crop&q=80" },
+  { title: "May December", rating: 8.1, genre: "Drama", year: 2023, poster: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=300&h=450&fit=crop&q=80" },
+];
 ---
 
 <!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <style is:global>
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+      :root {
+        --black:     #080809;
+        --surface:   #101013;
+        --surface-2: #18181d;
+        --surface-3: #222228;
+        --gold:      #c9a84c;
+        --gold-dim:  #8a6f2e;
+        --cream:     #f0ede6;
+        --muted:     #6b6b7a;
+        --border:    rgba(255,255,255,0.07);
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+
+      html { background: var(--black); color: var(--cream); }
+
+      body {
+        font-family: 'Syne', sans-serif;
+        background: var(--black);
+        overflow-x: hidden;
+        margin: 0;
+      }
+
+      /* Film grain overlay */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.4;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100svh;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 clamp(1.5rem, 5vw, 5rem) clamp(3rem, 8vh, 6rem);
+        overflow: hidden;
+      }
+
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201, 168, 76, 0.08) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 70% at 10% 80%, rgba(138, 111, 46, 0.06) 0%, transparent 50%),
+          linear-gradient(180deg, #0d0d10 0%, #080809 50%, #050506 100%);
+        z-index: 0;
+      }
+
+      .hero-lines {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+        background-size: 80px 80px;
+        mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+        -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+        z-index: 0;
+      }
+
+      .hero-eyebrow {
+        font-family: 'DM Mono', monospace;
+        font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.2rem;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .hero-eyebrow::before {
+        content: '';
+        display: inline-block;
+        width: 2rem;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.7;
+      }
+
+      .hero-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(4.5rem, 13vw, 14rem);
+        font-weight: 300;
+        line-height: 0.88;
+        letter-spacing: -0.02em;
+        color: var(--cream);
+        position: relative;
+        z-index: 1;
+        margin: 0 0 2rem;
+      }
+
+      .hero-title em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      .hero-subtitle {
+        font-family: 'Syne', sans-serif;
+        font-size: clamp(0.85rem, 1.5vw, 1rem);
+        font-weight: 400;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        max-width: 38ch;
+        line-height: 1.7;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+      }
+
+      .hero-cta-row {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 2.5rem;
+        position: relative;
+        z-index: 1;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--black);
+        background: var(--gold);
+        padding: 0.85rem 2rem;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.25s, transform 0.25s;
+        display: inline-block;
+      }
+
+      .btn-primary:hover {
+        background: #e0bc62;
+        transform: translateY(-1px);
+      }
+
+      .btn-ghost {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.25s;
+      }
+
+      .btn-ghost:hover { color: var(--cream); }
+
+      .btn-ghost::after {
+        content: '→';
+        transition: transform 0.25s;
+      }
+
+      .btn-ghost:hover::after { transform: translateX(4px); }
+
+      /* ── FLOATING STATS ── */
+      .hero-stats {
+        position: absolute;
+        right: clamp(1.5rem, 5vw, 5rem);
+        bottom: clamp(3rem, 8vh, 6rem);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        z-index: 1;
+      }
+
+      @media (max-width: 600px) {
+        .hero-stats { display: none; }
+      }
+
+      .stat-item { text-align: right; }
+
+      .stat-num {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 2.5rem;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--cream);
+      }
+
+      .stat-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.25rem;
+      }
+
+      /* ── SCROLL INDICATOR ── */
+      .scroll-line {
+        position: absolute;
+        left: clamp(1.5rem, 5vw, 5rem);
+        bottom: 0;
+        width: 1px;
+        height: 5rem;
+        background: linear-gradient(to bottom, transparent, var(--gold));
+        z-index: 1;
+        animation: pulse-line 2.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse-line {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+
+      /* ── SECTION COMMON ── */
+      .section {
+        padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 5rem);
+        position: relative;
+      }
+
+      .section-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .section-label::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .section-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 300;
+        line-height: 1;
+        color: var(--cream);
+        margin: 0 0 3.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      .section-title em {
+        font-style: italic;
+        color: var(--gold);
+      }
+
+      /* ── FEATURED REVIEW CARDS ── */
+      .featured-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+        gap: 2px;
+      }
+
+      .review-card {
+        position: relative;
+        aspect-ratio: 2/3;
+        overflow: hidden;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+      }
+
+      .review-card-poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+        filter: brightness(0.55) saturate(0.8);
+      }
+
+      .review-card:hover .review-card-poster {
+        transform: scale(1.06);
+        filter: brightness(0.3) saturate(0.5);
+      }
+
+      .review-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(8, 8, 9, 0.97) 0%,
+          rgba(8, 8, 9, 0.5) 45%,
+          transparent 70%
+        );
+      }
+
+      .review-card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem 1.75rem;
+        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .review-card:hover .review-card-content {
+        transform: translateY(-0.5rem);
+      }
+
+      .review-card-genre {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 0.5rem;
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .review-card-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+        font-weight: 400;
+        line-height: 1.1;
+        color: var(--cream);
+        margin: 0 0 0.25rem;
+      }
+
+      .review-card-director {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+      }
+
+      .review-card-excerpt {
+        font-size: 0.82rem;
+        color: rgba(240, 237, 230, 0.65);
+        line-height: 1.65;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+        opacity: 0;
+        margin: 0;
+      }
+
+      .review-card:hover .review-card-excerpt {
+        max-height: 6rem;
+        opacity: 1;
+      }
+
+      .review-card-rating {
+        position: absolute;
+        top: 1.25rem;
+        right: 1.25rem;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--gold);
+        background: rgba(8, 8, 9, 0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 0.35rem 0.7rem;
+        border: 1px solid rgba(201, 168, 76, 0.2);
+        line-height: 1;
+      }
+
+      .review-card-read {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 1.2rem;
+        opacity: 0;
+        transform: translateY(6px);
+        transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+        text-decoration: none;
+      }
+
+      .review-card-read::after {
+        content: '→';
+        transition: transform 0.25s;
+      }
+
+      .review-card:hover .review-card-read {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── DIVIDER ── */
+      .divider-wrap {
+        padding: 0 clamp(1.5rem, 5vw, 5rem);
+      }
+
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── MANIFESTO STRIP ── */
+      .manifesto {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 5vw, 5rem);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .manifesto::before {
+        content: '"';
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 30rem;
+        font-weight: 300;
+        color: rgba(201, 168, 76, 0.04);
+        position: absolute;
+        top: -6rem;
+        left: -2rem;
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .manifesto-text {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.6rem, 3.5vw, 3rem);
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.35;
+        color: var(--cream);
+        max-width: 50ch;
+        position: relative;
+        z-index: 1;
+        margin: 0;
+      }
+
+      .manifesto-attr {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-top: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── RECENT SCROLL SECTION ── */
+      .recent-section {
+        padding: clamp(4rem, 10vh, 8rem) 0;
+      }
+
+      .recent-header {
+        padding: 0 clamp(1.5rem, 5vw, 5rem);
+        margin-bottom: 2.5rem;
+      }
+
+      .scroll-track {
+        display: flex;
+        gap: 2px;
+        overflow-x: auto;
+        padding: 0 clamp(1.5rem, 5vw, 5rem);
+        padding-bottom: 1.5rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        cursor: grab;
+      }
+
+      .scroll-track::-webkit-scrollbar { display: none; }
+      .scroll-track.active { cursor: grabbing; }
+
+      .scroll-card {
+        flex: 0 0 200px;
+        position: relative;
+        aspect-ratio: 2/3;
+        overflow: hidden;
+        text-decoration: none;
+        display: block;
+      }
+
+      @media (min-width: 768px) { .scroll-card { flex: 0 0 240px; } }
+
+      .scroll-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
+        filter: brightness(0.6) saturate(0.7);
+      }
+
+      .scroll-card:hover img {
+        transform: scale(1.05);
+        filter: brightness(0.35) saturate(0.5);
+      }
+
+      .scroll-card-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.25rem 1rem;
+        background: linear-gradient(to top, rgba(8,8,9,0.95) 0%, transparent 100%);
+        transform: translateY(4px);
+        transition: transform 0.4s ease;
+      }
+
+      .scroll-card:hover .scroll-card-info { transform: translateY(0); }
+
+      .scroll-card-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: var(--cream);
+        line-height: 1.2;
+        margin-bottom: 0.2rem;
+      }
+
+      .scroll-card-meta {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .scroll-card-rating-badge {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.7rem;
+        color: var(--gold);
+        background: rgba(8,8,9,0.75);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        padding: 0.2rem 0.45rem;
+        border: 1px solid rgba(201,168,76,0.25);
+      }
+
+      /* ── FADE IN ANIMATIONS ── */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      }
+
+      @keyframes fadeUp {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .delay-1 { animation-delay: 0.1s; }
+      .delay-2 { animation-delay: 0.25s; }
+      .delay-3 { animation-delay: 0.4s; }
+      .delay-4 { animation-delay: 0.55s; }
+      .delay-5 { animation-delay: 0.7s; }
+
+      /* ── SCROLL REVEAL ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── CUSTOM SCROLLBAR ── */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: var(--black); }
+      ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+      /* ── HEADER OVERRIDE ── */
+      header {
+        background: rgba(8, 8, 9, 0.7) !important;
+        border-bottom: 1px solid var(--border) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-lines"></div>
+        <div class="scroll-line"></div>
+
+        <div class="hero-eyebrow fade-up delay-1">
+          Est. 2024 &nbsp;·&nbsp; Film &amp; Television Reviews
+        </div>
+
+        <h1 class="hero-title fade-up delay-2">
+          The<br /><em>Binge</em><br />Bear
+        </h1>
+
+        <p class="hero-subtitle fade-up delay-3">
+          Considered criticism for the obsessive viewer. Where cinema is treated as it deserves — with reverence, rigor, and the occasional growl.
+        </p>
+
+        <div class="hero-cta-row fade-up delay-4">
+          <a href="/blog" class="btn-primary">Browse Reviews</a>
+          <a href="/about" class="btn-ghost">Our Approach</a>
+        </div>
+
+        <div class="hero-stats fade-up delay-5">
+          <div class="stat-item">
+            <div class="stat-num">840+</div>
+            <div class="stat-label">Reviews</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">96%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED REVIEWS -->
+      <section class="section" style="padding-top: 0;">
+        <div class="section-label reveal">Featured This Season</div>
+        <h2 class="section-title reveal">Essential<br /><em>Viewing</em></h2>
+
+        <div class="featured-grid">
+          {featuredReviews.map((review, i) => (
+            <article
+              class="review-card reveal"
+              style={`transition-delay: ${i * 0.12}s`}
+            >
+              <img
+                class="review-card-poster"
+                src={review.poster}
+                alt={`${review.title} poster`}
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+              <div class="review-card-overlay"></div>
+              <span class="review-card-rating">{review.rating}</span>
+              <div class="review-card-content">
+                <div class="review-card-genre">
+                  {review.genre.map(g => <span>{g}</span>)}
+                </div>
+                <h3 class="review-card-title">{review.title}</h3>
+                <div class="review-card-director">dir. {review.director} · {review.year}</div>
+                <p class="review-card-excerpt">{review.excerpt}</p>
+                <span class="review-card-read">Read Review</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <div class="divider-wrap">
+        <div class="divider reveal"></div>
+      </div>
+
+      <!-- MANIFESTO -->
+      <div class="manifesto">
+        <p class="manifesto-text reveal">
+          "Great cinema doesn't ask for your attention. It commands your silence, then returns it — transformed."
+        </p>
+        <p class="manifesto-attr reveal" style="transition-delay: 0.15s;">
+          — The Binge Bear Manifesto
+        </p>
+      </div>
+
+      <!-- RECENTLY REVIEWED -->
+      <section class="recent-section">
+        <div class="recent-header">
+          <div class="section-label reveal">Fresh Ink</div>
+          <h2 class="section-title reveal">Recently<br /><em>Reviewed</em></h2>
+        </div>
+
+        <div class="scroll-track" id="scrollTrack">
+          {recentReviews.map((film, i) => (
+            <a
+              href={`/blog/${film.title.toLowerCase().replace(/\s+/g, '-')}`}
+              class="scroll-card reveal"
+              style={`transition-delay: ${i * 0.08}s`}
+            >
+              <img src={film.poster} alt={film.title} loading="lazy" />
+              <span class="scroll-card-rating-badge">{film.rating}</span>
+              <div class="scroll-card-info">
+                <div class="scroll-card-title">{film.title}</div>
+                <div class="scroll-card-meta">{film.genre} · {film.year}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+    </main>
+
+    <Footer />
+
+    <script>
+      // Intersection Observer for reveal animations
+      const reveals = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
+      );
+      reveals.forEach(el => observer.observe(el));
+
+      // Click-drag scroll for recent track
+      const track = document.getElementById('scrollTrack');
+      if (track) {
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+
+        track.addEventListener('mousedown', (e) => {
+          isDown = true;
+          track.classList.add('active');
+          startX = e.pageX - track.offsetLeft;
+          scrollLeft = track.scrollLeft;
+        });
+        track.addEventListener('mouseleave', () => { isDown = false; track.classList.remove('active'); });
+        track.addEventListener('mouseup', () => { isDown = false; track.classList.remove('active'); });
+        track.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - track.offsetLeft;
+          const walk = (x - startX) * 1.8;
+          track.scrollLeft = scrollLeft - walk;
+        });
+      }
+    </script>
+  </body>
 </html>
