@@ -1,50 +1,16 @@
 ---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-const featuredReviews = [
-  {
-    id: 1,
-    title: "Dune: Part Two",
-    year: 2024,
-    director: "Denis Villeneuve",
-    rating: 9.6,
-    genre: ["Sci-Fi", "Epic"],
-    poster: "https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&h=600&fit=crop&q=80",
-    excerpt: "A staggering achievement in blockbuster filmmaking. Villeneuve delivers the impossible: a sequel that eclipses its predecessor in every conceivable way.",
-  },
-  {
-    id: 2,
-    title: "Past Lives",
-    year: 2023,
-    director: "Celine Song",
-    rating: 8,
-    genre: ["Drama", "Romance"],
-    poster: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400&h=600&fit=crop&q=80",
-    excerpt: "Quietly devastating. A debut feature of such emotional precision it feels like a memory you forgot you had.",
-  },
-  {
-    id: 3,
-    title: "The Bear",
-    year: 2023,
-    director: "Christopher Storer",
-    rating: 8.4,
-    genre: ["Drama", "Series"],
-    poster: "https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&h=600&fit=crop&q=80",
-    excerpt: "Television has rarely felt this visceral. Season two raises the bar so high it becomes its own genre.",
-  },
-];
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const recentReviews = [
-  { title: "Poor Things", rating: 8.7, genre: "Fantasy", year: 2023, poster: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300&h=450&fit=crop&q=80" },
-  { title: "Oppenheimer", rating: 9.0, genre: "Biopic", year: 2023, poster: "https://images.unsplash.com/photo-1518834107812-67b0b7c58434?w=300&h=450&fit=crop&q=80" },
-  { title: "All of Us Strangers", rating: 8.8, genre: "Drama", year: 2023, poster: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300&h=450&fit=crop&q=80" },
-  { title: "Killers of the Flower Moon", rating: 8.5, genre: "Crime", year: 2023, poster: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=450&fit=crop&q=80" },
-  { title: "Saltburn", rating: 7.1, genre: "Thriller", year: 2023, poster: "https://images.unsplash.com/photo-1542204165-65bf26472b9b?w=300&h=450&fit=crop&q=80" },
-  { title: "May December", rating: 8.1, genre: "Drama", year: 2023, poster: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=300&h=450&fit=crop&q=80" },
-];
+const featuredPosts = posts.slice(0, 3);
+const recentPosts = posts;
 ---
 
 <!doctype html>
@@ -370,17 +336,6 @@ const recentReviews = [
         transform: translateY(-0.5rem);
       }
 
-      .review-card-genre {
-        font-family: 'DM Mono', monospace;
-        font-size: 0.6rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--gold);
-        margin-bottom: 0.5rem;
-        display: flex;
-        gap: 0.75rem;
-      }
-
       .review-card-title {
         font-family: 'Cormorant Garamond', serif;
         font-size: clamp(1.6rem, 2.5vw, 2.2rem);
@@ -390,7 +345,7 @@ const recentReviews = [
         margin: 0 0 0.25rem;
       }
 
-      .review-card-director {
+      .review-card-year {
         font-family: 'DM Mono', monospace;
         font-size: 0.65rem;
         color: var(--muted);
@@ -412,22 +367,6 @@ const recentReviews = [
       .review-card:hover .review-card-excerpt {
         max-height: 6rem;
         opacity: 1;
-      }
-
-      .review-card-rating {
-        position: absolute;
-        top: 1.25rem;
-        right: 1.25rem;
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--gold);
-        background: rgba(8, 8, 9, 0.8);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: 0.35rem 0.7rem;
-        border: 1px solid rgba(201, 168, 76, 0.2);
-        line-height: 1;
       }
 
       .review-card-read {
@@ -593,20 +532,6 @@ const recentReviews = [
         color: var(--muted);
       }
 
-      .scroll-card-rating-badge {
-        position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
-        font-family: 'DM Mono', monospace;
-        font-size: 0.7rem;
-        color: var(--gold);
-        background: rgba(8,8,9,0.75);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        padding: 0.2rem 0.45rem;
-        border: 1px solid rgba(201,168,76,0.25);
-      }
-
       /* ── FADE IN ANIMATIONS ── */
       .fade-up {
         opacity: 0;
@@ -697,29 +622,28 @@ const recentReviews = [
         <h2 class="section-title reveal">Essential<br /><em>Viewing</em></h2>
 
         <div class="featured-grid">
-          {featuredReviews.map((review, i) => (
-            <article
+          {featuredPosts.map((post, i) => (
+            <a
+              href={`/blog/${post.id}`}
               class="review-card reveal"
               style={`transition-delay: ${i * 0.12}s`}
             >
-              <img
-                class="review-card-poster"
-                src={review.poster}
-                alt={`${review.title} poster`}
-                loading={i === 0 ? "eager" : "lazy"}
-              />
+              {post.data.heroImage && (
+                <Image
+                  class="review-card-poster"
+                  src={post.data.heroImage}
+                  alt={post.data.title}
+                  loading={i === 0 ? "eager" : "lazy"}
+                />
+              )}
               <div class="review-card-overlay"></div>
-              <span class="review-card-rating">{review.rating}</span>
               <div class="review-card-content">
-                <div class="review-card-genre">
-                  {review.genre.map(g => <span>{g}</span>)}
-                </div>
-                <h3 class="review-card-title">{review.title}</h3>
-                <div class="review-card-director">dir. {review.director} · {review.year}</div>
-                <p class="review-card-excerpt">{review.excerpt}</p>
+                <h3 class="review-card-title">{post.data.title}</h3>
+                <div class="review-card-year">{post.data.pubDate.getFullYear()}</div>
+                <p class="review-card-excerpt">{post.data.description}</p>
                 <span class="review-card-read">Read Review</span>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>
@@ -746,17 +670,22 @@ const recentReviews = [
         </div>
 
         <div class="scroll-track" id="scrollTrack">
-          {recentReviews.map((film, i) => (
+          {recentPosts.map((post, i) => (
             <a
-              href={`/blog/${film.title.toLowerCase().replace(/\s+/g, '-')}`}
+              href={`/blog/${post.id}`}
               class="scroll-card reveal"
               style={`transition-delay: ${i * 0.08}s`}
             >
-              <img src={film.poster} alt={film.title} loading="lazy" />
-              <span class="scroll-card-rating-badge">{film.rating}</span>
+              {post.data.heroImage && (
+                <Image
+                  src={post.data.heroImage}
+                  alt={post.data.title}
+                  loading="lazy"
+                />
+              )}
               <div class="scroll-card-info">
-                <div class="scroll-card-title">{film.title}</div>
-                <div class="scroll-card-meta">{film.genre} · {film.year}</div>
+                <div class="scroll-card-title">{post.data.title}</div>
+                <div class="scroll-card-meta">{post.data.pubDate.getFullYear()}</div>
               </div>
             </a>
           ))}
