@@ -14,8 +14,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 <html lang="en">
   <head>
     <BaseHead title={title} description={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
     <style>
-      /* ─── TOKENS ─────────────────────────────────────────── */
       :root {
         --black:    #080809;
         --surface:  #101013;
@@ -25,10 +27,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         --gold-dim: #8a6f2e;
         --cream:    #f0ede6;
         --muted:    #6b6b7a;
-        --prose-w:  680px;
+        --prose-w:  700px;
       }
-
-      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syne:wght@400;500;700&family=DM+Mono:wght@300;400;500&display=swap');
 
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -52,7 +52,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         opacity: 0.35;
       }
 
-      /* header glass */
       header {
         background: rgba(8,8,9,0.75) !important;
         border-bottom: 1px solid var(--border) !important;
@@ -62,7 +61,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
       main { width: 100%; }
 
-      /* ─── CINEMATIC HERO ─────────────────────────────────── */
+      /* ── HERO ──────────────────────────────────────────── */
       .review-hero {
         position: relative;
         width: 100%;
@@ -85,21 +84,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         to   { transform: scale(1.04); filter: brightness(0.45) saturate(0.65); }
       }
 
-      /* multi-stop gradient: top vignette + heavy bottom fade */
       .review-hero-gradient {
         position: absolute;
         inset: 0;
-        background:
-          linear-gradient(to bottom,
-            rgba(8,8,9,0.55) 0%,
-            rgba(8,8,9,0.1)  30%,
-            rgba(8,8,9,0.1)  55%,
-            rgba(8,8,9,0.85) 82%,
-            rgba(8,8,9,1)    100%
-          );
+        background: linear-gradient(
+          to bottom,
+          rgba(8,8,9,0.45) 0%,
+          rgba(8,8,9,0.05) 30%,
+          rgba(8,8,9,0.05) 55%,
+          rgba(8,8,9,0.88) 82%,
+          rgba(8,8,9,1)    100%
+        );
       }
 
-      /* no-image fallback: textured dark panel */
       .review-hero-placeholder {
         width: 100%;
         height: 100%;
@@ -140,16 +137,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         user-select: none;
       }
 
-      /* ─── TITLE BLOCK (overlaps hero bottom) ────────────── */
+      /* ── TITLE BLOCK ───────────────────────────────────── */
       .review-title-block {
         position: relative;
         z-index: 2;
         max-width: var(--prose-w);
-        margin: 0 auto;
-        padding: 0 clamp(1.25rem, 5vw, 2rem);
-        /* pull up over the hero gradient */
-        margin-top: -14rem;
-        padding-bottom: clamp(2.5rem, 5vh, 4rem);
+        margin: -13rem auto 0;
+        padding: 0 clamp(1.25rem, 5vw, 2rem) clamp(2.5rem, 5vh, 4rem);
         animation: fadeUp 0.9s 0.3s cubic-bezier(0.25,0.46,0.45,0.94) both;
       }
 
@@ -196,7 +190,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         font-weight: 300;
         font-style: italic;
         line-height: 1.55;
-        color: rgba(240,237,230,0.6);
+        color: rgba(240,237,230,0.55);
         margin-bottom: 2rem;
         max-width: 54ch;
       }
@@ -233,7 +227,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         flex-shrink: 0;
       }
 
-      /* ─── RULE ───────────────────────────────────────────── */
+      /* ── ORNAMENTAL RULE ───────────────────────────────── */
       .review-rule {
         max-width: var(--prose-w);
         margin: 0 auto clamp(2.5rem, 5vh, 4rem);
@@ -254,11 +248,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         font-family: 'Cormorant Garamond', serif;
         font-size: 1rem;
         color: var(--gold);
-        opacity: 0.5;
+        opacity: 0.45;
         line-height: 1;
       }
 
-      /* ─── PROSE BODY ─────────────────────────────────────── */
+      /* ── PROSE WRAP ────────────────────────────────────── */
       .prose-wrap {
         max-width: var(--prose-w);
         margin: 0 auto;
@@ -266,26 +260,28 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         animation: fadeUp 0.9s 0.6s cubic-bezier(0.25,0.46,0.45,0.94) both;
       }
 
-      /* ── prose typography resets ── */
+      /* ── PARAGRAPHS ────────────────────────────────────── */
       .prose-wrap :global(p) {
         font-family: 'Cormorant Garamond', serif;
         font-size: clamp(1.08rem, 1.8vw, 1.22rem);
-        line-height: 1.82;
-        color: rgba(240,237,230,0.82);
-        margin-bottom: 1.6em;
+        line-height: 1.88;
+        color: rgba(240,237,230,0.78);
+        margin-bottom: 1.7em;
         font-weight: 400;
       }
 
-      .prose-wrap :global(p:first-child::first-letter) {
-        font-size: 4.2em;
+      /* drop cap on first paragraph only */
+      .prose-wrap :global(p:first-of-type::first-letter) {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 4.4em;
         font-weight: 300;
         float: left;
-        line-height: 0.78;
-        margin: 0.08em 0.12em 0 0;
+        line-height: 0.76;
+        margin: 0.1em 0.14em 0 0;
         color: var(--gold);
-        font-family: 'Cormorant Garamond', serif;
       }
 
+      /* ── HEADINGS ──────────────────────────────────────── */
       .prose-wrap :global(h2) {
         font-family: 'Cormorant Garamond', serif;
         font-size: clamp(1.7rem, 3vw, 2.4rem);
@@ -293,61 +289,136 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         font-style: italic;
         letter-spacing: -0.015em;
         color: var(--cream);
-        margin: 2.5em 0 0.8em;
+        margin: 3em 0 0.85em;
         line-height: 1.1;
+        position: relative;
+        padding-left: 1.1rem;
+      }
+
+      .prose-wrap :global(h2::before) {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.15em;
+        bottom: 0.1em;
+        width: 2px;
+        background: var(--gold);
+        opacity: 0.5;
       }
 
       .prose-wrap :global(h3) {
-        font-family: 'Syne', sans-serif;
-        font-size: clamp(0.95rem, 1.5vw, 1.05rem);
-        font-weight: 700;
-        letter-spacing: 0.12em;
+        font-family: 'DM Mono', monospace;
+        font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+        font-weight: 500;
+        letter-spacing: 0.28em;
         text-transform: uppercase;
         color: var(--gold);
-        margin: 2em 0 0.75em;
+        margin: 2.5em 0 1em;
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
       }
 
+      .prose-wrap :global(h3::after) {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+        max-width: 120px;
+      }
+
+      /* ── BLOCKQUOTE ────────────────────────────────────── */
       .prose-wrap :global(blockquote) {
-        border-left: none;
         position: relative;
-        margin: 2.5em 0;
-        padding: 1.5em 2em 1.5em 2.5em;
+        margin: 3em 0;
+        padding: 2.25rem 2.5rem 2.25rem 3rem;
         background: var(--surface);
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
+        border: none;
+        border-left: none;
+        overflow: hidden;
       }
 
+      /* top + bottom hairlines with gold fade */
       .prose-wrap :global(blockquote::before) {
-        content: '\201C';
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 6rem;
-        color: var(--gold);
-        opacity: 0.15;
+        content: '';
         position: absolute;
-        top: -1rem;
-        left: 0.5rem;
-        line-height: 1;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(to right, var(--gold), rgba(201,168,76,0.1) 60%, transparent);
+      }
+
+      .prose-wrap :global(blockquote::after) {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(to right, rgba(201,168,76,0.25), transparent 50%);
+      }
+
+      /* gold left bar */
+      .prose-wrap :global(blockquote > *) {
+        position: relative;
+        z-index: 1;
       }
 
       .prose-wrap :global(blockquote p) {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+        font-weight: 300;
         font-style: italic;
-        color: rgba(240,237,230,0.7);
-        font-size: clamp(1.1rem, 2vw, 1.3rem);
+        line-height: 1.65;
+        color: rgba(240,237,230,0.82);
         margin: 0;
+        letter-spacing: 0.01em;
       }
 
+      /* decorative quote mark */
+      .prose-wrap :global(blockquote p::before) {
+        content: '\201C';
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 5rem;
+        color: var(--gold);
+        opacity: 0.18;
+        position: absolute;
+        top: -1.6rem;
+        left: -0.5rem;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      /* vertical gold bar */
+      .prose-wrap :global(blockquote) {
+        border-left: 2px solid rgba(201,168,76,0.4);
+      }
+
+      /* attribution line if present */
+      .prose-wrap :global(blockquote cite),
+      .prose-wrap :global(blockquote footer) {
+        display: block;
+        margin-top: 1.1rem;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--gold);
+        opacity: 0.55;
+        font-style: normal;
+      }
+
+      /* ── LINKS ─────────────────────────────────────────── */
       .prose-wrap :global(a) {
         color: var(--gold);
         text-decoration: none;
-        border-bottom: 1px solid rgba(201,168,76,0.3);
-        transition: border-color 0.2s, color 0.2s;
+        border-bottom: 1px solid rgba(201,168,76,0.28);
+        transition: color 0.2s, border-color 0.2s;
       }
 
       .prose-wrap :global(a:hover) {
-        color: #e0bc62;
-        border-bottom-color: rgba(224,188,98,0.7);
+        color: #e2be65;
+        border-bottom-color: rgba(226,190,101,0.65);
       }
 
+      /* ── INLINE FORMATTING ─────────────────────────────── */
       .prose-wrap :global(strong) {
         font-weight: 600;
         color: var(--cream);
@@ -358,35 +429,83 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         color: rgba(240,237,230,0.9);
       }
 
+      /* ── LISTS ─────────────────────────────────────────── */
       .prose-wrap :global(ul),
       .prose-wrap :global(ol) {
         font-family: 'Cormorant Garamond', serif;
         font-size: clamp(1.05rem, 1.8vw, 1.18rem);
-        color: rgba(240,237,230,0.78);
-        padding-left: 1.5em;
-        margin-bottom: 1.6em;
-        line-height: 1.75;
+        color: rgba(240,237,230,0.75);
+        padding-left: 0;
+        margin-bottom: 1.7em;
+        line-height: 1.8;
+        list-style: none;
       }
 
-      .prose-wrap :global(li) { margin-bottom: 0.4em; }
+      .prose-wrap :global(ul li) {
+        padding-left: 1.5em;
+        position: relative;
+        margin-bottom: 0.5em;
+      }
 
+      .prose-wrap :global(ul li::before) {
+        content: '◆';
+        position: absolute;
+        left: 0;
+        font-size: 0.35em;
+        color: var(--gold);
+        opacity: 0.6;
+        top: 0.55em;
+      }
+
+      .prose-wrap :global(ol) {
+        counter-reset: ol-counter;
+      }
+
+      .prose-wrap :global(ol li) {
+        padding-left: 2em;
+        position: relative;
+        margin-bottom: 0.5em;
+        counter-increment: ol-counter;
+      }
+
+      .prose-wrap :global(ol li::before) {
+        content: counter(ol-counter, decimal-leading-zero);
+        position: absolute;
+        left: 0;
+        font-family: 'DM Mono', monospace;
+        font-size: 0.62em;
+        color: var(--gold);
+        opacity: 0.55;
+        top: 0.3em;
+        letter-spacing: 0.05em;
+      }
+
+      /* ── HR ────────────────────────────────────────────── */
       .prose-wrap :global(hr) {
         border: none;
-        margin: 3em 0;
+        margin: 3.5em 0;
         display: flex;
         align-items: center;
         gap: 1rem;
+        position: relative;
       }
 
-      .prose-wrap :global(hr::before),
-      .prose-wrap :global(hr::after) {
+      .prose-wrap :global(hr::before) {
         content: '';
         flex: 1;
         height: 1px;
-        background: var(--border);
-        display: block;
+        background: linear-gradient(to right, transparent, var(--border));
       }
 
+      .prose-wrap :global(hr::after) {
+        content: '✦';
+        font-size: 0.5rem;
+        color: var(--gold);
+        opacity: 0.4;
+        flex-shrink: 0;
+      }
+
+      /* ── CODE ──────────────────────────────────────────── */
       .prose-wrap :global(code) {
         font-family: 'DM Mono', monospace;
         font-size: 0.82em;
@@ -399,9 +518,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       .prose-wrap :global(pre) {
         background: var(--surface);
         border: 1px solid var(--border);
-        padding: 1.5em;
+        border-left: 2px solid rgba(201,168,76,0.3);
+        padding: 1.75em;
         overflow-x: auto;
-        margin-bottom: 1.6em;
+        margin-bottom: 1.7em;
       }
 
       .prose-wrap :global(pre code) {
@@ -409,38 +529,57 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         border: none;
         padding: 0;
         color: var(--cream);
+        font-size: 0.88em;
       }
 
+      /* ── IMAGES ────────────────────────────────────────── */
       .prose-wrap :global(img) {
         width: 100%;
         height: auto;
         display: block;
         margin: 2.5em 0;
         filter: brightness(0.85) saturate(0.8);
-        transition: filter 0.4s ease;
+        transition: filter 0.5s ease;
       }
 
       .prose-wrap :global(img:hover) {
         filter: brightness(1) saturate(1);
       }
 
-      /* ─── BACK LINK ──────────────────────────────────────── */
+      .prose-wrap :global(figure) {
+        margin: 2.5em 0;
+      }
+
+      .prose-wrap :global(figcaption) {
+        font-family: 'DM Mono', monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.75rem;
+        text-align: center;
+        opacity: 0.65;
+      }
+
+      /* ── BACK LINK ─────────────────────────────────────── */
       .back-link-wrap {
         max-width: var(--prose-w);
         margin: 0 auto;
-        padding: 0 clamp(1.25rem, 5vw, 2rem) 2rem;
+        padding: 0 clamp(1.25rem, 5vw, 2rem) 3rem;
+        border-top: 1px solid var(--border);
       }
 
       .back-link {
         font-family: 'DM Mono', monospace;
-        font-size: 0.65rem;
-        letter-spacing: 0.2em;
+        font-size: 0.62rem;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
         color: var(--muted);
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.65rem;
+        padding-top: 2rem;
         transition: color 0.25s, gap 0.25s;
       }
 
@@ -448,11 +587,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
       .back-link:hover {
         color: var(--gold);
-        gap: 0.9rem;
+        gap: 1rem;
       }
 
-      /* ─── CUSTOM SCROLLBAR ───────────────────────────────── */
-      ::-webkit-scrollbar { width: 4px; }
+      /* ── SCROLLBAR ─────────────────────────────────────── */
+      ::-webkit-scrollbar { width: 3px; }
       ::-webkit-scrollbar-track { background: var(--black); }
       ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
     </style>
@@ -464,7 +603,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     <main>
       <article>
 
-        <!-- CINEMATIC HERO IMAGE -->
         <div class="review-hero">
           {heroImage ? (
             <>
@@ -485,7 +623,6 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           )}
         </div>
 
-        <!-- TITLE BLOCK -->
         <div class="review-title-block">
           <div class="review-eyebrow">Film Review</div>
           <h1 class="review-title">{title}</h1>
@@ -503,21 +640,18 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           </div>
         </div>
 
-        <!-- ORNAMENTAL RULE -->
         <div class="review-rule">
           <div class="review-rule-line"></div>
           <span class="review-rule-ornament">✦</span>
           <div class="review-rule-line"></div>
         </div>
 
-        <!-- PROSE CONTENT -->
         <div class="prose-wrap">
           <slot />
         </div>
 
       </article>
 
-      <!-- BACK NAVIGATION -->
       <div class="back-link-wrap">
         <a href="/blog" class="back-link">All Reviews</a>
       </div>

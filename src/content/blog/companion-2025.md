@@ -2,10 +2,8 @@
 title: "Companion Review"
 description: "A fun, messy, and stylish sci-fi thriller that struggles to decide whether it wants to be serious, unserious, or something in between."
 pubDate: "May 12 2026"
-heroImage: "../../assets/blog-placeholder-2.jpg"
+heroImage: "../../assets/companion-still.webp"
 ---
-
-# Companion Review
 
 *Companion* tries to cross the line between fun and serious far too often.
 
