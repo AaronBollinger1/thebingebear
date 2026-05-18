@@ -3,6 +3,7 @@ title: "Dune Part 2 Review"
 description: "A breathtaking work of art that encaptures all of what a movie should be and more."
 pubDate: "May 16 2026"
 heroImage: "../../assets/dune-part-two-still.webp"
+posterImage: "../../assets/dune-part-two-poster.webp"
 ---
 
 Even thinking about this movie gives me chills. The contrast, landscape, acting, writing. None if it feels corny, or cringey, or forced - this is like water in its vastness and fluidity. If you are not drawn to sci-fi, this will capture your attention, if you do not like serious movies, you will stare and marvel at the artistry your day has been blessed with. I firmly believe that this movie is THAT good. 
