@@ -3,6 +3,7 @@ title: "Midsommar Review"
 description: "This movie is, in its entirety, strange. Not strange in the way a bad movie is strange, but strange in the way that makes you ask why humans are the way they are."
 pubDate: "April 20 2026"
 heroImage: "../../assets/midsommar-still.webp"
+posterImage: "../../assets/midsommar-poster.webp"
 ---
 
 Talk about a rollercoaster of emotions? In retrospect this movie is an expression of what humans long for - community and power. The real credit goes to whoever’s idea it was to shoot it in Hungary and Sweden and make it visually so stunning. The story is captivating, confusing, and inspires everything in me to never go to a European commune, ever.
