@@ -4,6 +4,7 @@ description: "A fun, messy, and stylish sci-fi thriller that struggles to decide
 pubDate: "May 12 2026"
 heroImage: "../../assets/companion-still.webp"
 posterImage: "../../assets/companion-poster.webp"
+releaseYear: 2025
 ---
 
 *Companion* tries to cross the line between fun and serious far too often.

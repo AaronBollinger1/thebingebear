@@ -639,7 +639,7 @@ const recentPosts = posts;
               <div class="review-card-overlay"></div>
               <div class="review-card-content">
                 <h3 class="review-card-title">{post.data.title}</h3>
-                <div class="review-card-year">{post.data.pubDate.getFullYear()}</div>
+                <div class="review-card-year">{post.data.releaseYear ?? post.data.pubDate.getFullYear()}</div>
                 <p class="review-card-excerpt">{post.data.description}</p>
                 <span class="review-card-read">Read Review</span>
               </div>
@@ -685,7 +685,7 @@ const recentPosts = posts;
               )}
               <div class="scroll-card-info">
                 <div class="scroll-card-title">{post.data.title}</div>
-                <div class="scroll-card-meta">{post.data.pubDate.getFullYear()}</div>
+                <div class="scroll-card-meta">{post.data.releaseYear ?? post.data.pubDate.getFullYear()}</div>
               </div>
             </a>
           ))}

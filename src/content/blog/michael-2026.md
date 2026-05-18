@@ -4,6 +4,7 @@ description: "A captivating, emotional, and entertaining look into the life and 
 pubDate: "May 12 2026"
 heroImage: "../../assets/michael-still.webp"
 posterImage: "../../assets/michael-poster.webp"
+releaseYear: 2025
 ---
 
 The purpose behind this entire production, as it is for many, was the money. We must accept that this is not a film selflessly produced and created by Michael Jackson post-success. This is developed and created by a talented, hungry, established team to shock the box office — which, undoubtedly, it has. This was not intended to be a cinematic spectacle or a beautiful heartwarming story; while it does both extraordinarily well, they are byproducts of the origin, the man himself, not simply the team behind it. But the team can only tell the tale as truthfully as it fits. Nevertheless, this ends up shocking you to your core when you first take your seat.

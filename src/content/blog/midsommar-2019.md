@@ -4,6 +4,7 @@ description: "This movie is, in its entirety, strange. Not strange in the way a 
 pubDate: "April 20 2026"
 heroImage: "../../assets/midsommar-still.webp"
 posterImage: "../../assets/midsommar-poster.webp"
+releaseYear: 2019
 ---
 
 Talk about a rollercoaster of emotions? In retrospect this movie is an expression of what humans long for - community and power. The real credit goes to whoever’s idea it was to shoot it in Hungary and Sweden and make it visually so stunning. The story is captivating, confusing, and inspires everything in me to never go to a European commune, ever.

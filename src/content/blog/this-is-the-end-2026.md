@@ -4,6 +4,7 @@ description: "Fun blended with chaos into a concoction only Seth Rogen & James F
 pubDate: "April 20 2026"
 heroImage: "../../assets/this-is-the-end-still.webp"
 posterImage: "../../assets/this-is-the-end-poster.webp"
+releaseYear: 2013
 ---
 
 Talk about a star studded cast? This movie's political incorrectness makes it so I can’t delve into all the particulars, but that is exactly what makes this movie funny. So many movies like this get negative reviews on other pages when it's movies like this that entertain and make people truly happy. Don’t get me wrong, there are parts where it's overdone or underdone, like a lot. But those moments of unholy inappropriateness make you giddy inside. But anyways lets talk about the cast and story (because both were horrifically entertaining)

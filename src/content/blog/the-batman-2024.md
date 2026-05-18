@@ -4,6 +4,7 @@ description: "The epitome of darkness that disassembles the framework of hope th
 pubDate: "May 1 2026"
 heroImage: "../../assets/the-batman-still.webp"
 posterImage: "../../assets/the-batman-poster.webp"
+releaseYear: 2022
 ---
 
 *The Batman* is a spectacle that all neutrals, fans, and haters alike can appreciate with a single watch.
