@@ -192,40 +192,6 @@ const recentPosts = posts;
 
       .btn-ghost:hover::after { transform: translateX(4px); }
 
-      /* ── FLOATING STATS ── */
-      .hero-stats {
-        position: absolute;
-        right: clamp(1.5rem, 3vw, 3rem);
-        bottom: clamp(3rem, 8vh, 6rem);
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        z-index: 1;
-      }
-
-      @media (max-width: 600px) {
-        .hero-stats { display: none; }
-      }
-
-      .stat-item { text-align: right; }
-
-      .stat-num {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: 2.5rem;
-        font-weight: 600;
-        line-height: 1;
-        color: var(--cream);
-      }
-
-      .stat-label {
-        font-family: 'DM Mono', monospace;
-        font-size: 0.6rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-top: 0.25rem;
-      }
-
       /* ── SCROLL INDICATOR ── */
       .scroll-line {
         position: absolute;
@@ -604,16 +570,6 @@ const recentPosts = posts;
           <a href="/about" class="btn-ghost">Our Approach</a>
         </div>
 
-        <div class="hero-stats fade-up delay-5">
-          <div class="stat-item">
-            <div class="stat-num">840+</div>
-            <div class="stat-label">Reviews</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num">96%</div>
-            <div class="stat-label">Accuracy</div>
-          </div>
-        </div>
       </section>
 
       <!-- FEATURED REVIEWS -->
