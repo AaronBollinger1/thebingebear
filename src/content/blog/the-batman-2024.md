@@ -3,6 +3,7 @@ title: "The Batman Review"
 description: "The epitome of darkness that disassembles the framework of hope that has kept the superhero industry afloat."
 pubDate: "May 1 2026"
 heroImage: "../../assets/the-batman-still.webp"
+posterImage: "../../assets/the-batman-poster.webp"
 ---
 
 *The Batman* is a spectacle that all neutrals, fans, and haters alike can appreciate with a single watch.
