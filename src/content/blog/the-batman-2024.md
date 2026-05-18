@@ -24,4 +24,4 @@ The score alone could drag me back into a theater. Those few notes feel ancient 
 If you’re a superhero fanatic and haven’t seen it, why? Go watch it asap. If you’re not into the superhero stuff, I wouldn’t be surprised if this changed your mind.
 
 
-## Rating 8.6/10.
+## Rating 9.2/10.
